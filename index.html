@@ -3,26 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js"></script>
+    
     <title>Library</title>
 </head>
 <body>
     <button class="new-btn">New Book</button>
+    <h1>My Library</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Genre</th>
+            </tr>
+            <tbody id = "book-table-body"></tbody>
+        </thead>
+    </table>
 
-    <dialog>
+    <dialog class="new-book-dialog">
         <form action="submit">
-            <input type="text" id="title" name="book-title" >
             <label for="title">Title:</label>
-            <input type="text" id="author" name="book-author" >
+            <input type="text" id="title" name="book-title" >
             <label for="author">Author:</label>
-            <input type="text" id="year" name="book-year" >
+            <input type="text" id="author" name="book-author" >
             <label for="year">Year:</label>
-            <input type="text" id="genre" name="book-genre" >
+            <input type="text" id="year" name="book-year" >
             <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="book-genre" >
+            <label for="isRead">Read:</label>
+            <input type="text" id="isRead" name="book-isread" >
         </form>
-        <button>Add </button>
+        <button class="add-btn">Add book</button>
+        <button class="cancel-btn">Cancel</button>
     </dialog>
 
-    
+    <script src="script.js"></script>
 </body>
 </html>
