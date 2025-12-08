@@ -7,7 +7,7 @@ const newBookForm = document.querySelector("form");
 const myLibrary = [];
 
 class Book {
-    constructor(title, author, year, genre) {
+    constructor(title, author, year, genre, isRead) {
         this.title = title;
         this.id = crypto.randomUUID();
         this.author = author;
@@ -32,9 +32,8 @@ function displayBooks() {
     dltBtn.textContent = "Delete";
     dltBtn.className = "dlt-btn";
 
-    book.dataset.id = book[id];
-
-
+    row.dataset.id = book.id;
+    
     // Only display specific keys (optional: skip 'id' if not needed)
     for (const key in book) {
       if (key === "id") continue; // Skip ID if you don’t want to show it
@@ -48,9 +47,11 @@ function displayBooks() {
     }
 
     dltBtn.addEventListener("click", () => {
-        bookIndex = book.dataset.id;
-        if (bookIndex > -1) {
-            myLibrary.splice(bookIndex, 1);
+        const bookID = row.dataset.id;
+        const targetBookID = myLibrary.findIndex(b => b.id === bookID);
+        
+        if (targetBookID !== -1) {
+            myLibrary.splice(targetBookID, 1);
             displayBooks();
         }
     })
@@ -62,6 +63,7 @@ function displayBooks() {
 
 function addBookToLibrary(title, author, year, genre, isRead) {
     const newBook = new Book(title, author, year, genre, isRead);
+    console.log(newBook);
     myLibrary.push(newBook);
 }
 
@@ -72,14 +74,16 @@ newBtn.addEventListener("click", (e) => {
 
 addBtn.addEventListener("click", () => {
     const formData = new FormData(newBookForm);
-    const book = [];
+    const book = {};
 
     for (const [key, value] of formData.entries()) {
         book[key] = value;
-        console.log(book[key]);
+        console.log("book[key]:", key, book[key]);
+        console.log("value:", value);
     }
     
-    addBookToLibrary(book[title], book[author], book[year], book[genre], book[isRead]);
+    console.log(book);
+    addBookToLibrary(book["title"], book["author"], book["year"], book["genre"], book["isRead"]);
     dialog.close();
     displayBooks();
     console.log(myLibrary);
