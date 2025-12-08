@@ -85,8 +85,12 @@ addBtn.addEventListener("click", () => {
     console.log(book);
     addBookToLibrary(book["title"], book["author"], book["year"], book["genre"], book["isRead"]);
     dialog.close();
+
+    for (const [key, _] of formData.entries()) {
+        document.querySelector(`input[name = "${key}"]`).value = "";
+    }
+
     displayBooks();
-    console.log(myLibrary);
 })
 
 cancBtn.addEventListener("click", () => {
