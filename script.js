@@ -36,14 +36,28 @@ function displayBooks() {
     
     // Only display specific keys (optional: skip 'id' if not needed)
     for (const key in book) {
-      if (key === "id") continue; // Skip ID if you don’t want to show it
+        const cell = document.createElement("td");
+        
+        if (key === "id") continue; // Skip ID if you don’t want to show it
+        
+        if (key === "isRead") {
+        // Create the checkbox
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = book.isRead;
 
-      const cell = document.createElement("td");
-      
-      const value = key === "isRead" ? (book[key] ? "Yes" : "No") : book[key];
-      
-      cell.textContent = value;
-      row.appendChild(cell);
+        checkbox.addEventListener("change", () => {
+            book.isRead = checkbox.checked;
+            console.log(book);
+        });
+
+        cell.appendChild(checkbox);
+
+        } else {
+            cell.textContent = book[key];
+        }
+
+        row.appendChild(cell);
     }
 
     dltBtn.addEventListener("click", () => {
@@ -76,30 +90,38 @@ addBtn.addEventListener("click", () => {
     const formData = new FormData(newBookForm);
     const book = {};
 
+    console.log("book form:", newBookForm);
     for (const [key, value] of formData.entries()) {
-        book[key] = value;
-        console.log("book[key]:", key, book[key]);
-        console.log("value:", value);
+        if (key === "isRead") {
+            book[key] = value === "on";
+        } else {
+            book[key] = value;
+        }
     }
     
     console.log(book);
     addBookToLibrary(book["title"], book["author"], book["year"], book["genre"], book["isRead"]);
     dialog.close();
 
-    for (const [key, _] of formData.entries()) {
-        document.querySelector(`input[name = "${key}"]`).value = "";
-    }
-
+    cleanForm(formData);    
+    
     displayBooks();
 })
 
 cancBtn.addEventListener("click", () => {
     const formData = new FormData(newBookForm);
-
-    for (const [key, _] of formData.entries()) {
-        document.querySelector(`input[name = "${key}"]`).value = "";
-    }
     
+    cleanForm(formData);
+        
     dialog.close();
 })
 
+function cleanForm(formData) {
+    for (const [key, _] of formData.entries()) {
+        if (key!="isRead") {
+            document.querySelector(`input[name = "${key}"]`).value = "";
+        } else {
+            document.querySelector(`input[name = "isRead"]`).checked = false;
+        }
+    }
+}
