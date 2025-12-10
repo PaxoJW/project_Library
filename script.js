@@ -3,6 +3,8 @@ const dialog = document.querySelector(".new-book-dialog");
 const addBtn = document.querySelector(".add-btn");
 const cancBtn = document.querySelector(".cancel-btn");
 const newBookForm = document.querySelector("form");
+const errorMsg = document.querySelector(".error");
+const bookTitle = document.getElementById("title");
 
 const myLibrary = [];
 
@@ -14,10 +16,6 @@ class Book {
         this.year = year;
         this.genre = genre;
         this.isRead = isRead;
-    }
-
-    toggleRead() {
-        this.isRead === true ? false : true;
     }
 }
 
@@ -86,26 +84,31 @@ newBtn.addEventListener("click", (e) => {
     dialog.show();
 })
 
-addBtn.addEventListener("click", () => {
+addBtn.addEventListener("click", (e) => {    
     const formData = new FormData(newBookForm);
     const book = {};
 
-    console.log("book form:", newBookForm);
-    for (const [key, value] of formData.entries()) {
-        if (key === "isRead") {
-            book[key] = value === "on";
-        } else {
-            book[key] = value;
+    if (!bookTitle.validity.valid) {
+        showError();
+        e.preventDefault();
+    } else {
+        console.log("book form:", newBookForm);
+        for (const [key, value] of formData.entries()) {
+            if (key === "isRead") {
+                book[key] = value === "on";
+            } else {
+                book[key] = value;
+            }
         }
-    }
-    
-    console.log(book);
-    addBookToLibrary(book["title"], book["author"], book["year"], book["genre"], book["isRead"]);
-    dialog.close();
 
-    cleanForm(formData);    
-    
-    displayBooks();
+        console.log(book);
+        addBookToLibrary(book["title"], book["author"], book["year"], book["genre"], book["isRead"]);
+        dialog.close();
+
+        cleanForm(formData);    
+        
+        displayBooks();
+    }
 })
 
 cancBtn.addEventListener("click", () => {
@@ -124,4 +127,19 @@ function cleanForm(formData) {
             document.querySelector(`input[name = "isRead"]`).checked = false;
         }
     }
+}
+
+bookTitle.addEventListener("input", (e) => {
+    if (bookTitle.validity.valid) {
+        errorMsg.textContent = "";
+        errorMsg.className = "error";
+    }
+    
+})
+
+function showError() {
+    if (bookTitle.validity.valueMissing) {
+        errorMsg.textContent = "Provide a book title before continuing";
+    }
+    errorMsg.className = "error active";
 }
